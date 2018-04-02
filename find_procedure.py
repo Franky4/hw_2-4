@@ -42,7 +42,7 @@ def find_in_file(file, f_str):
     result = False
     with open(file) as f:
         for line in f:
-            if f_str in line:
+            if f_str in line.lower():
                 return True
     return result
 
@@ -57,7 +57,7 @@ def main():
     list_files = []
     my_dir = "Migrations"
     my_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), my_dir)
-    # print(my_dir)
+
     my_format_file = '.sql'
     for d, dirs, files in os.walk(my_dir):
         for f in files:
@@ -68,7 +68,7 @@ def main():
     while True:
         new_list = list_files[:]
         list_files = []
-        my_str = str(input('Введите строку для поиска: '))
+        my_str = str(input('Введите строку для поиска: ')).lower()
         for f in new_list:
             if find_in_file(f, my_str):
                 list_files.append(f)
