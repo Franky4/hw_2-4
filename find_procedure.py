@@ -39,12 +39,11 @@ import os
 
 
 def find_in_file(file, f_str):
-    result = False
     with open(file) as f:
         for line in f:
             if f_str in line.lower():
                 return True
-    return result
+    return False
 
 
 def print_list_files(list_files):
@@ -61,7 +60,7 @@ def main():
     my_format_file = '.sql'
     for d, dirs, files in os.walk(my_dir):
         for f in files:
-            if my_format_file in f:
+            if f.endswith(my_format_file) is True:  # исправлен механизм проверки
                 list_files.append(os.path.join(my_dir, f))
     print('Всего {} sql файлов'.format(len(list_files)))
 
@@ -72,8 +71,7 @@ def main():
         for f in new_list:
             if find_in_file(f, my_str):
                 list_files.append(f)
-        if len(list_files) < 5:
-            print_list_files(list_files)
+        print_list_files(list_files)
 
         print('Всего: {}'.format(len(list_files)))
 
