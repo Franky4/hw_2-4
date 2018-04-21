@@ -36,6 +36,17 @@
 # не забываем организовывать собственный код в функции
 
 import os
+from time import time
+
+
+def log_time(func):  # пробуем декоратор в работе
+    def wrapper(*args, **kwargs):
+        begin = time()
+        res = func(*args, **kwargs)
+        end = time()
+        print('Время выполнения {}'.format(end - begin))
+        return res
+    return wrapper
 
 
 def find_in_file(file, f_str):
@@ -46,33 +57,28 @@ def find_in_file(file, f_str):
     return False
 
 
+@log_time
 def print_list_files(list_files):
     for item in list_files:
         print(item)
 
 
 def main():
-
     list_files = []
     my_dir = "Migrations"
     my_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), my_dir)
-
     my_format_file = '.sql'
+
     for d, dirs, files in os.walk(my_dir):
-        for f in files:
-            if f.endswith(my_format_file) is True:  # исправлен механизм проверки
-                list_files.append(os.path.join(my_dir, f))
+        # оформляем поиск продвинутым способом, чувствую джедайскую силу )
+        list_files = [os.path.join(my_dir, f) for f in files if f.endswith(my_format_file)]
     print('Всего {} sql файлов'.format(len(list_files)))
 
     while True:
         new_list = list_files[:]
-        list_files = []
         my_str = str(input('Введите строку для поиска: ')).lower()
-        for f in new_list:
-            if find_in_file(f, my_str):
-                list_files.append(f)
+        list_files = [f for f in new_list if find_in_file(f, my_str)]
         print_list_files(list_files)
-
         print('Всего: {}'.format(len(list_files)))
 
 
